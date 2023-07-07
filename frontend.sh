@@ -1,9 +1,8 @@
 yum install nginx -y
 rm -rf /usr/share/nginx/html/*
+cp roboshop.conf /etc/nginx/default.d/roboshop.conf
 curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip
 cd /usr/share/nginx/html
 unzip /tmp/frontend.zip
-
-#We have to create configuration file
-systemctl enable nginx
 systemctl restart nginx
+systemctl enable nginx
