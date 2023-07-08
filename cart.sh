@@ -1,4 +1,4 @@
-echo -e "\e[36m>>>>>>>>>>>>>>Configuring nodeJS repos <<<<<<<<<<<<<<<<\e[0m"
+echo -e "\e[36m>>>>>>>>>>>>>>Configuring nodeJS repos<<<<<<<<<<<<<<<<\e[0m"
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash
 
 echo -e "\e[36m>>>>>>>>>>>>>>Inastall nodejs<<<<<<<<<<<<<<<<\e[0m"
