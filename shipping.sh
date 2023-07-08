@@ -1,4 +1,6 @@
-source common.sh
+script_path=$(dirname $0)
+source ${script_path}/common.sh
+
 echo -e "\e[36m>>>>>>>>>>>>>>Install Maven<<<<<<<<<<<<<<<<\e[0m"
 yum install maven -y
 
@@ -27,7 +29,7 @@ echo -e "\e[36m>>>>>>>>>>>>>>Load schema<<<<<<<<<<<<<<<<\e[0m"
 mysql -h mysql-dev.sreenivasulareddydevops.online -uroot -pRoboShop@1 < /app/schema/shipping.sql
 
 echo -e "\e[36m>>>>>>>>>>>>>>Setup systemd service<<<<<<<<<<<<<<<<\e[0m"
-cp /home/centos/iRobo-shell/shipping.service /etc/systemd/system/shipping.service
+cp ${script_path}/shipping.service /etc/systemd/system/shipping.service
 
 echo -e "\e[36m>>>>>>>>>>>>>>Restart service<<<<<<<<<<<<<<<<\e[0m"
 systemctl daemon-reload

@@ -1,4 +1,6 @@
-source common.sh
+script_path=$(dirname $0)
+source ${script_path}/common.sh
+
 echo -e "\e[36m>>>>>>>>>>>>>>Configuring nodeJS repos <<<<<<<<<<<<<<<<\e[0m"
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash
 
@@ -23,7 +25,7 @@ echo -e "\e[36m>>>>>>>>>>>>>>Install npm repos<<<<<<<<<<<<<<<<\e[0m"
 npm install
 
 echo -e "\e[36m>>>>>>>>>>>>>>Copy user service file <<<<<<<<<<<<<<<<\e[0m"
-cp /home/centos/iRobo-shell/user.service /etc/systemd/system/user.service
+cp $script_path/user.service /etc/systemd/system/user.service
 
 echo -e "\e[36m>>>>>>>>>>>>>>Restart the user service<<<<<<<<<<<<<<<<\e[0m"
 systemctl daemon-reload
@@ -31,7 +33,7 @@ systemctl enable user
 systemctl restart user
 
 echo -e "\e[36m>>>>>>>>>>>>>>Copy mongo repo file <<<<<<<<<<<<<<<<\e[0m"
-cp /home/centos/iRobo-shell/mongo.repo /etc/yum.repos.d/mongo.repo
+cp $script_path/mongo.repo /etc/yum.repos.d/mongo.repo
 
 echo -e "\e[36m>>>>>>>>>>>>>>Install mongo client<<<<<<<<<<<<<<<<\e[0m"
 yum install mongodb-org-shell -y
