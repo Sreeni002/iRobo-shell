@@ -85,6 +85,7 @@ print_head "Download Maven dependencies"
     echo -e "\e[32m SUCCESS\e[0m"
   else
     echo -e "\e[32m FAILURE\e[0m"
+    exit 1
   fi
   mv target/${component}-1.0.jar ${component}.jar
 
