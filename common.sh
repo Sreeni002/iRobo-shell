@@ -72,35 +72,35 @@ func_systemd_setup() {
 }
 
 function_nodejs() {
-print_head "Configuring nodeJS repos"
-curl -sL https://rpm.nodesource.com/setup_lts.x | bash
-func_status_check $?
+  print_head "Configuring nodeJS repos"
+  curl -sL https://rpm.nodesource.com/setup_lts.x | bash
+  func_status_check $?
 
 print_head "Inastall nodejs"
-yum install nodejs -y
-func_status_check $?
+  yum install nodejs -y
+  func_status_check $?
 
-func_app_prereq
+  func_app_prereq
 
-print_head "Install nodejs repos"
-npm install
-func_status_check $?
+  print_head "Install nodejs repos"
+  npm install
+  func_status_check $?
 
-schema_setup
-func_systemd_setup
+  schema_setup
+  func_systemd_setup
 }
 
 func_java() {
-print_head "Install Maven"
-yum install maven -y
-func_status_check $?
+  print_head "Install Maven"
+  yum install maven -y
+  func_status_check $?
 
-func_app_prereq
+  func_app_prereq
 
 print_head "Download Maven dependencies"
   mvn clean package
 
-func_status_check $?
+  func_status_check $?
 
   mv target/${component}-1.0.jar ${component}.jar
   schema_setup
