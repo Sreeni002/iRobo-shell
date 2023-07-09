@@ -71,11 +71,21 @@ func_systemd_setup
 func_java() {
 print_head "Install Maven"
 yum install maven -y
+if [ $? -eq 0 ]; then
+  echo -e "\e[32m SUCCESS\e[0m"
+else
+  echo -e "\e[32m FAILURE\e[0m"
+fi
 
 func_app_prereq
 
 print_head "Download Maven dependencies"
   mvn clean package
+  if [ $? -eq 0 ]; then
+    echo -e "\e[32m SUCCESS\e[0m"
+  else
+    echo -e "\e[32m FAILURE\e[0m"
+  fi
   mv target/${component}-1.0.jar ${component}.jar
 
   schema_setup
