@@ -46,7 +46,10 @@ schema_setup() {
 
 func_app_prereq() {
   print_head "Add app userid"
-  useradd ${app_user} &>>$log_file
+  id ${app_user} &>>$log_file
+  if [ $? -ne 0 ]; then
+    useradd ${app_user} &>>$log_file
+  fi
   func_status_check $?
 
   print_head "create app directory"
