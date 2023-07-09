@@ -6,63 +6,85 @@ print_head() {
 echo -e "\e[36m>>>>>>>>>>>>>>$1<<<<<<<<<<<<<<<<\e[0m"
 }
 
+func_status_check() {
+    if [ $1 -eq 0 ]; then
+      echo -e "\e[32m SUCCESS\e[0m"
+    else
+      echo -e "\e[32m FAILURE\e[0m"
+      exit 1
+    fi
+}
 schema_setup() {
   if [ "$schema_setup" == "mongo" ]; then
     print_head "Copy mongo repo file"
     cp $script_path/mongo.repo /etc/yum.repos.d/mongo.repo
+    func_status_check $?
 
     print_head "Install mongo client"
     yum install mongodb-org-shell -y
+    func_status_check $?
 
     print_head "Load schema"
     mongo --host mongodb-dev.sreenivasulareddydevops.online </app/schema/${component}.js
+    func_status_check $?
   fi
   if [ "${schema_setup}" == "mysql" ]; then
     print_head "Install my sql"
     yum install mysql -y
+    func_status_check $?
 
     print_head "Load schema"
     mysql -h mysql-dev.sreenivasulareddydevops.online -uroot -p${mysql_root_password} < /app/schema/shipping.sql
+    func_status_check $?
   fi
 }
 
 func_app_prereq() {
   print_head "Add app userid"
   useradd ${app_user}
+  func_status_check $?
 
   print_head "create app directory"
   rm -rf /app
   mkdir /app
+  func_status_check $?
 
   print_head "Dowload the app content"
   curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip
+  func_status_check $?
 
   print_head "Extract the app content"
   cd /app
   unzip /tmp/${component}.zip
+  func_status_check $?
 }
 
 func_systemd_setup() {
   print_head "Setup systemd service"
   cp ${script_path}/${component}.service /etc/systemd/system/${component}.service
+  func_status_check $?
 
   print_head "Restart ${component} service"
   systemctl daemon-reload
   systemctl enable ${component}
   systemctl restart ${component}
+  func_status_check $?
 }
 
 function_nodejs() {
 print_head "Configuring nodeJS repos"
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash
+func_status_check $?
 
 print_head "Inastall nodejs"
 yum install nodejs -y
+func_status_check $?
 
 func_app_prereq
 
-print_head "Install npm repos"
+print_head "Install nodejs repos"
 npm install
+func_status_check $?
 
 schema_setup
 func_systemd_setup
@@ -71,24 +93,16 @@ func_systemd_setup
 func_java() {
 print_head "Install Maven"
 yum install maven -y
-if [ $? -eq 0 ]; then
-  echo -e "\e[32m SUCCESS\e[0m"
-else
-  echo -e "\e[32m FAILURE\e[0m"
-fi
+func_status_check $?
 
 func_app_prereq
 
 print_head "Download Maven dependencies"
   mvn clean package
-  if [ $? -eq 0 ]; then
-    echo -e "\e[32m SUCCESS\e[0m"
-  else
-    echo -e "\e[32m FAILURE\e[0m"
-    exit 1
-  fi
-  mv target/${component}-1.0.jar ${component}.jar
 
+func_status_check $?
+
+  mv target/${component}-1.0.jar ${component}.jar
   schema_setup
   func_systemd_setup
 }
