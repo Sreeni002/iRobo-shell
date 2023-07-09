@@ -8,18 +8,23 @@ if [ -z "$mysql_root_password" ]; then
   exit
 fi
 
-echo -e "\e[36m>>>>>>>>>>>>>>Disable mysql version 8 <<<<<<<<<<<<<<<<\e[0m"
-dnf module disable mysql -y
+print_head "Disable mysql version 8"
+dnf module disable mysql -y &>>$log_file
+func_status_check $?
 
-echo -e "\e[36m>>>>>>>>>>>>>>Copy mysql repo file <<<<<<<<<<<<<<<<\e[0m"
-cp ${script_path}/mysql.repo /etc/yum.repos.d/mysql.repo
+print_head "Copy mysql repo file"
+cp ${script_path}/mysql.repo /etc/yum.repos.d/mysql.repo &>>$log_file
+func_status_check $?
 
-echo -e "\e[36m>>>>>>>>>>>>>>Install mysql<<<<<<<<<<<<<<<<\e[0m"
-yum install mysql-community-server -y
+print_head "Install mysql"
+yum install mysql-community-server -y &>>$log_file
+func_status_check $?
 
-echo -e "\e[36m>>>>>>>>>>>>>>start<<<<<<<<<<<<<<<<\e[0m"
-systemctl enable mysqld
-systemctl restart mysqld
+print_head "start mysql service"
+systemctl enable mysqld &>>$log_file
+systemctl restart mysqld &>>$log_file
+func_status_check $?
 
-echo -e "\e[36m>>>>>>>>>>>>>>reset user id for mysql<<<<<<<<<<<<<<<<\e[0m"
-mysql_secure_installation --set-root-pass $mysql_root_password
+print_head "reset user id for mysql"
+mysql_secure_installation --set-root-pass $mysql_root_password &>>$log_file
+func_status_check $?
