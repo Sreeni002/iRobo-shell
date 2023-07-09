@@ -114,3 +114,21 @@ print_head "Download Maven dependencies"
   schema_setup
   func_systemd_setup
 }
+
+func_python() {
+
+print_head "Install python3"
+yum install python36 gcc python3-devel -y  &>>$log_file
+func_status_check
+
+func_app_prereq
+
+print_head "Install pip dependencies"
+pip3.6 install -r requirements.txt  &>>$log_file
+func_status_check
+
+print_head "Update password in system service file"
+sed -i -e "s|rabbitmq_appuser_password|${rabbitmq_appuser_password}|" ${script_path}/payment.service  &>>$log_file
+func_status_check
+func_systemd_setup
+}
