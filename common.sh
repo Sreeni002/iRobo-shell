@@ -46,9 +46,9 @@ schema_setup() {
 
 func_app_prereq() {
   print_head "Add app userid"
-  id ${app_user} &>>$log_file
+  id ${app_user} &>>/tmp/roboshop.log
   if [ $? -ne 0 ]; then
-    useradd ${app_user} &>>$log_file
+    useradd ${app_user} &>>/tmp/roboshop.log
   fi
   func_status_check $?
 
@@ -62,7 +62,7 @@ func_app_prereq() {
   func_status_check $?
 
   print_head "Extract the app content"
-  cd /app &>>$log_file
+  cd /app
   unzip /tmp/${component}.zip &>>$log_file
   func_status_check $?
 }
@@ -100,7 +100,7 @@ print_head "Inastall nodejs"
 
 func_java() {
   print_head "Install Maven"
-  yum install maven -y >/tmp/roboshop.log
+  yum install maven -y &>>$log_file
   func_status_check $?
 
   func_app_prereq
