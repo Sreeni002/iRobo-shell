@@ -5,7 +5,7 @@ rabbitmq_appuser_password=$1
 
 if [ -z "$rabbitmq_appuser_password" ]; then
   echo Input Roboshop app user password missing
-  exit
+  exit 1
 fi
 
 print_head "setup erlang repos"
