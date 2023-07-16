@@ -8,6 +8,6 @@ if [ -z "$mysql_root_password" ]; then
   exit 1
 fi
 
-component="shipping"
-schema_setup=mysql
+#component="shipping"
+#schema_setup=mysql
 func_java
